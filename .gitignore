@@ -31,3 +31,7 @@ build
 gradlew.bat
 gradle
 gradlew
+HELP.md
+build.gradle
+settings.gradle
+src/
