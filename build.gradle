@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'com.conflux'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            credentials {
+                username 'P1GGlL'
+                password 'T8YbM5SPEA'
+            }
+            url 'https://repo.rdc.aliyun.com/repository/132164-release-UDs6mp/'
+        }
+        maven {
+            credentials {
+                username 'P1GGlL'
+                password 'T8YbM5SPEA'
+            }
+            url 'https://repo.rdc.aliyun.com/repository/132164-snapshot-xcvsek/'
+        }
+
+    }
+}
+dependencies {
+    compile ("org.springframework.boot:spring-boot-starter-web") {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    compile ("org.springframework.boot:spring-boot-starter-log4j2")
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+
+    compile 'org.springframework:spring-jdbc'
+    compile 'org.conflux:web3j:1.0.0-RELEASE'
+    compile "com.alibaba:fastjson:1.2.62"
+    compile 'org.web3j:core:4.5.5'
+
+    compile "com.github.pagehelper:pagehelper:5.1.10"
+    compile 'mysql:mysql-connector-java:8.0.19'
+    compile 'org.mybatis:mybatis:3.5.3'
+    compile 'org.mybatis:mybatis-spring:2.0.3'
+    compile 'com.alibaba:druid:1.1.18'
+
+}
+
+test {
+    useJUnitPlatform()
+}

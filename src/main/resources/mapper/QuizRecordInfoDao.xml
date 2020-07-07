@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.conflux.contract.dao.QuizRecordInfoDao">
+  <resultMap id="BaseResultMap" type="com.conflux.contract.entity.QuizRecordInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="from_address" jdbcType="VARCHAR" property="fromAddress" />
+    <result column="to_address" jdbcType="VARCHAR" property="toAddress" />
+    <result column="amount" jdbcType="VARCHAR" property="amount" />
+    <result column="tran_hash" jdbcType="VARCHAR" property="tranHash" />
+    <result column="epoch_number" jdbcType="BIGINT" property="epochNumber" />
+    <result column="quiz_tran_hash" jdbcType="VARCHAR" property="quizTranHash" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="log" jdbcType="VARCHAR" property="log" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, from_address, to_address, amount, tran_hash, epoch_number, quiz_tran_hash, `status`, 
+    creat_time, update_time, is_delete, log
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from quiz_record_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from quiz_record_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.conflux.contract.entity.QuizRecordInfo" useGeneratedKeys="true">
+    insert into quiz_record_info (from_address, to_address, amount, 
+      tran_hash, epoch_number, quiz_tran_hash, 
+      `status`, creat_time, update_time, 
+      is_delete, log)
+    values (#{fromAddress,jdbcType=VARCHAR}, #{toAddress,jdbcType=VARCHAR}, #{amount,jdbcType=VARCHAR}, 
+      #{tranHash,jdbcType=VARCHAR}, #{epochNumber,jdbcType=BIGINT}, #{quizTranHash,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=TINYINT}, #{log,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.conflux.contract.entity.QuizRecordInfo" useGeneratedKeys="true">
+    insert into quiz_record_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fromAddress != null">
+        from_address,
+      </if>
+      <if test="toAddress != null">
+        to_address,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="tranHash != null">
+        tran_hash,
+      </if>
+      <if test="epochNumber != null">
+        epoch_number,
+      </if>
+      <if test="quizTranHash != null">
+        quiz_tran_hash,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="creatTime != null">
+        creat_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="log != null">
+        log,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fromAddress != null">
+        #{fromAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="toAddress != null">
+        #{toAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="tranHash != null">
+        #{tranHash,jdbcType=VARCHAR},
+      </if>
+      <if test="epochNumber != null">
+        #{epochNumber,jdbcType=BIGINT},
+      </if>
+      <if test="quizTranHash != null">
+        #{quizTranHash,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="creatTime != null">
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="log != null">
+        #{log,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.conflux.contract.entity.QuizRecordInfo">
+    update quiz_record_info
+    <set>
+      <if test="fromAddress != null">
+        from_address = #{fromAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="toAddress != null">
+        to_address = #{toAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="tranHash != null">
+        tran_hash = #{tranHash,jdbcType=VARCHAR},
+      </if>
+      <if test="epochNumber != null">
+        epoch_number = #{epochNumber,jdbcType=BIGINT},
+      </if>
+      <if test="quizTranHash != null">
+        quiz_tran_hash = #{quizTranHash,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="creatTime != null">
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="log != null">
+        log = #{log,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.conflux.contract.entity.QuizRecordInfo">
+    update quiz_record_info
+    set from_address = #{fromAddress,jdbcType=VARCHAR},
+      to_address = #{toAddress,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=VARCHAR},
+      tran_hash = #{tranHash,jdbcType=VARCHAR},
+      epoch_number = #{epochNumber,jdbcType=BIGINT},
+      quiz_tran_hash = #{quizTranHash,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      log = #{log,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getQuizRecordInfoByTranHash" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from quiz_record_info
+    where  tran_hash = #{transHash,jdbcType=VARCHAR}
+  </select>
+</mapper>
