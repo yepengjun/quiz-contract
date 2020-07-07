@@ -102,7 +102,9 @@ public class ContractLogMonitorService {
                 for (int i = 0; i < logList.size(); i++) {
                     Log log = logList.get(i);
                     logger.info("空投开始日志为log:{}",JSON.toJSONString(log));
+                    List<Type> formAddressDecode = FunctionReturnDecoder.decode(log.getTopics().get(1), convert);
                     List<Type> toAddressDecode = FunctionReturnDecoder.decode(log.getTopics().get(2), convert);
+                    String fromAddress = formAddressDecode.get(0).toString();
                     String toAddress = toAddressDecode.get(0).toString();
                     if (gcContractAddress.equals(toAddress)) {
                         String data = log.getData();
@@ -114,7 +116,7 @@ public class ContractLogMonitorService {
                             quizRecordInfo = new QuizRecordInfo();
                             quizRecordInfo.setAmount(amount.toString());
                             quizRecordInfo.setEpochNumber(currEpochNumber);
-                            quizRecordInfo.setFromAddress(log.getAddress());
+                            quizRecordInfo.setFromAddress(fromAddress);
                             quizRecordInfo.setToAddress(toAddress);
                             quizRecordInfo.setLog(JSON.toJSONString(log));
                             quizRecordInfo.setTranHash(log.getTransactionHash().get());
@@ -124,7 +126,7 @@ public class ContractLogMonitorService {
                         if (QuizStatusEnum.DONE.getCode().equals(quizRecordInfo.getStatus())) {
                             continue;
                         }
-                        String transfer = ercgcExecutor.transfer(BigInteger.valueOf(10000000), toAddress, amount,transactionHash);
+                        String transfer = ercgcExecutor.transfer(BigInteger.valueOf(10000000), fromAddress, amount,transactionHash);
                         QuizRecordInfo quizRecordInfoUpdate = new QuizRecordInfo();
                         quizRecordInfoUpdate.setId(quizRecordInfo.getId());
                         quizRecordInfoUpdate.setQuizTranHash(transfer);
