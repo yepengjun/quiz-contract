@@ -52,7 +52,6 @@ public class ContractLogMonitorService {
     private static String privateKey = "0xEF7D9A15879D6941B51E19AAC2E15AEA72A93337F92CEF32FAAD677DC849A89F";
     private static String gcContractAddress = "0x8ad759dd30a5ca03e29b5bdab423560c30394783";
     private static String fcContractAddress = "0x88a8f9b1835ae66b6f1da3c930b7d11220bebf78";
-    private static Account account = Account.create(cfx,privateKey);
     private static Long lastMonitorLogNum = 6308615L;
 
     /**
@@ -68,30 +67,30 @@ public class ContractLogMonitorService {
         }else {
             lastMonitorLogNum = quizLastEpochInfo.getEpochNumber()+1;
         }
-        ErcGcExecutor ercgcExecutor = new ErcGcExecutor(account,gcContractAddress);
-        //event Transfer(address indexed from, address indexed to, uint256 value);
-        List<TypeReference<?>> transactionEventType = Arrays.asList(
-                TypeReference.create(Address.class),
-                TypeReference.create(Address.class),
-                TypeReference.create(Uint256.class));
-        Event transactionEvent = new Event("Transfer", transactionEventType);
-        String transactionEventEncode = EventEncoder.encode(transactionEvent);
-        LogFilter logFilter = new LogFilter();
-        List<List<String>> topics = Arrays.asList(Arrays.asList(transactionEventEncode));
-        logFilter.setTopics(topics);
-        logFilter.setAddress(Arrays.asList(fcContractAddress));
-        List<TypeReference<?>> addressEventType = Arrays.asList(TypeReference.create(Address.class));
-        List<TypeReference<Type>> convert = Utils.convert(addressEventType);
         try {
             Request<BigInteger, BigIntResponse> epochNumber = cfx.getEpochNumber();
             BigInteger current = epochNumber.sendAndGet();
-            if (lastMonitorLogNum.compareTo(current.longValue()) >= 0) {
-                return;
-            }
-            Long minInterval = 200L;
-            if (current.longValue() - lastMonitorLogNum > minInterval) {
+            Long minInterval = 10L;
+            if (lastMonitorLogNum.compareTo(current.longValue() - minInterval) >= 0) {
+                lastMonitorLogNum = current.longValue() - minInterval;
+            }else {
                 current = BigInteger.valueOf(lastMonitorLogNum + minInterval);
             }
+            Account account = Account.create(cfx,privateKey);
+            ErcGcExecutor ercgcExecutor = new ErcGcExecutor(account,gcContractAddress);
+            //event Transfer(address indexed from, address indexed to, uint256 value);
+            List<TypeReference<?>> transactionEventType = Arrays.asList(
+                    TypeReference.create(Address.class),
+                    TypeReference.create(Address.class),
+                    TypeReference.create(Uint256.class));
+            Event transactionEvent = new Event("Transfer", transactionEventType);
+            String transactionEventEncode = EventEncoder.encode(transactionEvent);
+            LogFilter logFilter = new LogFilter();
+            List<List<String>> topics = Arrays.asList(Arrays.asList(transactionEventEncode));
+            logFilter.setTopics(topics);
+            logFilter.setAddress(Arrays.asList(fcContractAddress));
+            List<TypeReference<?>> addressEventType = Arrays.asList(TypeReference.create(Address.class));
+            List<TypeReference<Type>> convert = Utils.convert(addressEventType);
             logFilter.setFromEpoch(Epoch.numberOf(BigInteger.valueOf(lastMonitorLogNum)));
             logFilter.setToEpoch(Epoch.numberOf(current));
 
