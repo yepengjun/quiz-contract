@@ -50,9 +50,9 @@ public class ContractLogMonitorService {
 
     private static Cfx cfx = Cfx.create("http://mainnet-jsonrpc.conflux-chain.org:12537");
     private static String privateKey = "0xEF7D9A15879D6941B51E19AAC2E15AEA72A93337F92CEF32FAAD677DC849A89F";
-    private static String gcContractAddress = "0x8ad759dd30a5ca03e29b5bdab423560c30394783";
+    private static String gcContractAddress = "0x890086422f131b9d624cae0fb5b00f53db42fd1d";
     private static String fcContractAddress = "0x88a8f9b1835ae66b6f1da3c930b7d11220bebf78";
-    private static Long lastMonitorLogNum = 6308615L;
+    private static Long lastMonitorLogNum = 6441255L;
 
     /**
      * 监听押注日志、并空投代币
@@ -70,14 +70,13 @@ public class ContractLogMonitorService {
         try {
             Request<BigInteger, BigIntResponse> epochNumber = cfx.getEpochNumber();
             BigInteger current = epochNumber.sendAndGet();
-            Long minInterval = 10L;
+            Long minInterval = 100L;
             if (lastMonitorLogNum.compareTo(current.longValue() - minInterval) >= 0) {
                 lastMonitorLogNum = current.longValue() - minInterval;
             }else {
                 current = BigInteger.valueOf(lastMonitorLogNum + minInterval);
             }
             Account account = Account.create(cfx,privateKey);
-            ErcGcExecutor ercgcExecutor = new ErcGcExecutor(account,gcContractAddress);
             //event Transfer(address indexed from, address indexed to, uint256 value);
             List<TypeReference<?>> transactionEventType = Arrays.asList(
                     TypeReference.create(Address.class),
@@ -125,6 +124,7 @@ public class ContractLogMonitorService {
                         if (QuizStatusEnum.DONE.getCode().equals(quizRecordInfo.getStatus())) {
                             continue;
                         }
+                        ErcGcExecutor ercgcExecutor = new ErcGcExecutor(account,gcContractAddress);
                         String transfer = ercgcExecutor.transfer(BigInteger.valueOf(10000000), fromAddress, amount,transactionHash);
                         QuizRecordInfo quizRecordInfoUpdate = new QuizRecordInfo();
                         quizRecordInfoUpdate.setId(quizRecordInfo.getId());
